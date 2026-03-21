@@ -9,7 +9,9 @@ public class Usuario{
     private String id;
     private String nome;
     private double saldo;
+    
     public Usuario(){};
+    
     public Usuario(String id, String nome) {
         
         this.id = id;

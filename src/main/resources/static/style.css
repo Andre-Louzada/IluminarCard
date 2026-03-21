@@ -1,0 +1,159 @@
+body{font-family: Arial, sans-serif; 
+     text-align: center; 
+     padding: 5px; 
+     background-color: #f4f4f9;
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
+     height: 100vh;
+}
+#reader { 
+    width: 100%; 
+    max-width: 400px; 
+    margin: 0 auto; 
+    border-radius: 8px; 
+    overflow: hidden; 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+}
+.painel { 
+    margin-top: 20px; 
+    padding: 20px; 
+    background: white; 
+    border-radius: 8px; 
+    display: none; 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+    max-width: 400px; 
+    margin-left: auto; 
+    margin-right: auto;
+}
+input { 
+    padding: 10px; 
+    font-size: 16px; 
+    width: 80%; 
+    margin-bottom: 10px; 
+    border: 1px solid #ccc; 
+    border-radius: 4px;
+}
+button { 
+    padding: 10px 20px; 
+    margin: 5px; 
+    cursor: pointer; 
+    border: none; 
+    border-radius: 4px; 
+    font-weight: bold; 
+    font-size: 16px;
+}
+.btn-deposito { 
+    background-color: #4CAF50; 
+    color: white; 
+}
+.btn-cobrar { background-color: #f44336; color: white; }
+/*para mobile:
+idParticipante width 50
+escanear 
+*/
+    
+.img-iluminarCard { 
+    width: 100%; 
+    max-width: 800px; 
+    display: block; 
+    margin: auto;
+    border-radius: 35px; 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+}
+ .image-container { 
+    position: relative; 
+    display: inline-block; 
+    width: 100%; 
+    max-width: 800px; 
+    margin: auto;
+}
+.verso-container { 
+    position: relative; 
+    display: inline-block; 
+    width: 100%; 
+    max-width: 800px;    
+}
+.botoes { 
+    max-width: 800px;
+    width: 78%;
+    margin: auto;
+    height: 50px; 
+    z-index: 2;
+    position: absolute;
+    bottom :45%;
+    left: 15px;
+    display: flex;
+    justify-content: space-between;
+} 
+.informacoesUsuario { 
+    border: 1px solid pink;
+    max-width: 800px;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    position: absolute;
+    top: 0px;
+    bottom: 200px;
+    left: 0px;
+}
+.dados {
+    width: 100%;
+    height: 27%;
+    position: absolute;
+    z-index: 2;
+    top: 9%;
+    bottom:200px;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.botoes-verso {
+    width: 100%;
+     max-width: 800px;
+    height: 50px;
+    position: absolute;
+    z-index: 2;
+    top: 75%;
+    display: flex;
+    gap: 30px;
+    justify-content: space-between; 
+     padding: 0 20px; 
+    box-sizing: border-box; 
+}
+.campo-valor{
+    position: absolute;
+    left: 3.5%;
+    top: 41%;
+    z-index: 2;
+    height: 9%;
+    width: 48%;
+}
+
+.btn-escanear { 
+    background-color: #4CAF50;
+    color: white; 
+    border-radius: 4px; 
+    font-weight: bold; 
+    }
+.btn-buscar { 
+    background-color: #2196F3;
+    color: white; 
+    border-radius: 4px; 
+    font-weight: bold; 
+}
+#idParticipante {
+    max-width: 215px;
+    min-width: 70px; 
+    padding: auto; 
+    margin: auto;
+    font-size: 16px;
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+}
+
+/*body { background-image: url('iluminarCard.jpg'); background-size: cover; background-position: center; }
+*/

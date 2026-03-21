@@ -5,45 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Caixa Oficial - IluminarCard</title>
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #f4f4f9;}
-        #reader { width: 100%; max-width: 400px; margin: 0 auto; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .painel { margin-top: 20px; padding: 20px; background: white; border-radius: 8px; display: none; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 400px; margin-left: auto; margin-right: auto;}
-        input { padding: 10px; font-size: 16px; width: 80%; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;}
-        button { padding: 10px 20px; margin: 5px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; font-size: 16px;}
-        .btn-deposito { background-color: #4CAF50; color: white; }
-        .btn-cobrar { background-color: #f44336; color: white; }
-        #idParticipante{width: 150px;}
-        .btn-buscar{background-color: #2196F3; color: white;}
-        .btn-escanear{background-color: #4CAF50; color: white;}
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <h1>Central IluminarCard</h1>
-    <p>Aponte a câmera para o crachá do participante</p>
-    <button class="btn-escanear" onclick="escanear()">Escanear</button>
-    <p>ou insira o código manualmente</p>
-    <input type="text" id="idParticipante" placeholder="Digite o código do participante">
-    <button class="btn-buscar" onclick="buscarManualmente()">Buscar</button>
+    <!-- <h1>Central IluminarCard</h1> -->
+    <div class="image-container">
+        <img class="img-iluminarCard" src="iluminarCard.jpg" alt="erro na imagem"/>
+        <div class="botoes">
+            <button class="btn-escanear" onclick="escanear()">Escanear</button>
+            <input type="text" id="idParticipante" placeholder="Digite o código do participante">
+            <button class="btn-buscar" onclick="buscarManualmente()">Buscar</button>
+        </div>    
+    </div>
     <p id="mensagemBuscaManual" style="font-weight: bold; margin-top: 15px;"></p>
     
     <div id="reader"></div>
 
-    <div id="painelUsuario" class="painel">
-        <h2 id="nomeUsuario" style="margin-top: 0;">Nome do Usuário</h2>
-        <h3 id="saldoUsuario" style="color: #333;">Saldo: R$ 0.00</h3>
-        
-        <input type="number" id="valorOperacao" placeholder="Digite o valor (Ex: 15.50)" step="0.01">
-        <br>
-        <button class="btn-deposito" onclick="fazerOperacao('depositar')">Depositar</button>
-        <button class="btn-cobrar" id="btn-cobrar" onclick="fazerOperacao('retirar')">Cobrar</button>
-        
-        <p id="mensagemSistema" style="font-weight: bold; margin-top: 15px;"></p>
-        
-        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-        <button onclick="proximoCliente()" style="background-color: #2196F3; color: white;">Ler Próximo Cliente</button>
+    <!-- <div id="painelUsuario" class="painel" style="display: block;"> -->
+    <div class="verso-container">
+        <img class="img-iluminarCard" src="cartaoVerso.jpg" alt="erro ao carregar imagem">
+        <div class="informacoesUsuario">
+            <div class="dados">
+                <h2 id="nomeUsuario" style="margin-top: 10px; color: white;">Nome do Usuário</h2>
+                <h3 id="saldoUsuario" style="margin-top: 0;color: white;">Saldo: R$ 0.00</h3>
+            </div>
+
+            <input  class="campo-valor" type="number" id="valorOperacao" placeholder="Digite o valor (Ex: 15.50)" step="0.05">
+            
+            <div class="botoes-verso">    
+                <button class="btn-deposito" onclick="fazerOperacao('depositar')">Depositar</button>
+                <button class="btn-cobrar" id="btn-cobrar" onclick="fazerOperacao('retirar')">Cobrar</button>
+                <button class="btn-fechar" onclick="proximoCliente()" style="background-color: #2196F3; color: white;">Fechar</button>
+            </div>
+        </div>
+        <p id="mensagemSistema" style="font-weight: bold ;color: white; margin-top: 15px;"></p>
     </div>
+        
+        
+    <!-- </div> -->
 
     <script>
         
@@ -76,7 +76,7 @@
                     document.getElementById('saldoUsuario').innerText = "Saldo: R$ " + usuario.saldo.toFixed(2);
                     
                     // Mostra o painel com os botões de dinheiro
-                    document.getElementById('painelUsuario').style.display = 'block';
+                    document.getElementById('verso-container').style.display = 'block';
                     document.getElementById('mensagemSistema').innerText = "";
                     document.getElementById('mensagemBuscaManual').innerText = "";
                 })
@@ -131,7 +131,7 @@
 
         // 4. Função para resetar e ler a próxima pessoa da fila
         function proximoCliente() {
-            document.getElementById('painelUsuario').style.display = 'none';
+            document.getElementById('verso-container').style.display = 'none';
             document.getElementById('valorOperacao').value = "";
             document.getElementById('mensagemSistema').innerText = "";
             document.getElementById('btn-cobrar').style.display = 'inline-block';
