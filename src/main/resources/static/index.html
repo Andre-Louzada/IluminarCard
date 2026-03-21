@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caixa Oficial - IluminarCard</title>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #f4f4f9;}
+        #reader { width: 100%; max-width: 400px; margin: 0 auto; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .painel { margin-top: 20px; padding: 20px; background: white; border-radius: 8px; display: none; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 400px; margin-left: auto; margin-right: auto;}
+        input { padding: 10px; font-size: 16px; width: 80%; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;}
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; font-size: 16px;}
+        .btn-deposito { background-color: #4CAF50; color: white; }
+        .btn-cobrar { background-color: #f44336; color: white; }
+        #idParticipante{width: 150px;}
+        .btn-buscar{background-color: #2196F3; color: white;}
+        .btn-escanear{background-color: #4CAF50; color: white;}
+    </style>
+</head>
+<body>
+
+    <h1>Central IluminarCard</h1>
+    <p>Aponte a câmera para o crachá do participante</p>
+    <button class="btn-escanear" onclick="escanear()">Escanear</button>
+    <p>ou insira o código manualmente</p>
+    <input type="text" id="idParticipante" placeholder="Digite o código do participante">
+    <button class="btn-buscar" onclick="buscarManualmente()">Buscar</button>
+    <p id="mensagemBuscaManual" style="font-weight: bold; margin-top: 15px;"></p>
+    
+    <div id="reader"></div>
+
+    <div id="painelUsuario" class="painel">
+        <h2 id="nomeUsuario" style="margin-top: 0;">Nome do Usuário</h2>
+        <h3 id="saldoUsuario" style="color: #333;">Saldo: R$ 0.00</h3>
+        
+        <input type="number" id="valorOperacao" placeholder="Digite o valor (Ex: 15.50)" step="0.01">
+        <br>
+        <button class="btn-deposito" onclick="fazerOperacao('depositar')">Depositar</button>
+        <button class="btn-cobrar" id="btn-cobrar" onclick="fazerOperacao('retirar')">Cobrar</button>
+        
+        <p id="mensagemSistema" style="font-weight: bold; margin-top: 15px;"></p>
+        
+        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+        <button onclick="proximoCliente()" style="background-color: #2196F3; color: white;">Ler Próximo Cliente</button>
+    </div>
+
+    <script>
+        
+        
+        let usuarioAtualId = "";
+        let html5QrcodeScanner = null;
+
+        // 1. O que acontece quando a câmera acha um QR Code
+        function onScanSuccess(decodedText, decodedResult) {
+            usuarioAtualId = decodedText; // Salva o ID lido (ex: user_001)
+            // Pausa a câmera
+            html5QrcodeScanner.clear();
+            document.getElementById('reader').style.display = 'none';
+            buscarUsuarioNoBackend(usuarioAtualId);
+        }
+        function buscarUsuarioNoBackend(){    
+            // Busca os dados no seu Java!
+            fetch('/api/usuarios/' + usuarioAtualId)
+                .then(resposta => {
+                    if(!resposta.ok) throw new Error("Usuário não encontrado");
+                    return resposta.json();
+                })
+                .then(usuario => {
+                    // Preenche a tela com os dados vindos do Java
+                    let numeroDoCliente = parseInt(usuarioAtualId.replace("user_", ""));
+                    if(numeroDoCliente <10)
+                        document.getElementById('nomeUsuario').innerText = "Organização: " + usuario.nome;
+                    else
+                        document.getElementById('nomeUsuario').innerText = "Iluminado: " + usuario.nome;
+                    document.getElementById('saldoUsuario').innerText = "Saldo: R$ " + usuario.saldo.toFixed(2);
+                    
+                    // Mostra o painel com os botões de dinheiro
+                    document.getElementById('painelUsuario').style.display = 'block';
+                    document.getElementById('mensagemSistema').innerText = "";
+                    document.getElementById('mensagemBuscaManual').innerText = "";
+                })
+                .catch(erro => {
+                    alert("Erro: QR Code inválido ou usuário não encontrado no sistema.");
+                    
+                });
+            }
+
+        function escanear(){
+            html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: {width: 250, height: 250} }, false);
+            html5QrcodeScanner.render(onScanSuccess);
+            document.getElementById('reader').style.display = 'block';
+        }
+        // 3. A função que manda o dinheiro pro Java
+        function fazerOperacao(tipo) {
+            
+            let valorInput = document.getElementById('valorOperacao').value;
+
+            if (!valorInput || valorInput <= 0) {
+                alert("Por favor, digite um valor válido.");
+                return;
+            }
+
+            // Manda a ordem pro seu Spring Boot
+            let urlApi = `api/usuarios/${usuarioAtualId}/${tipo}?valor=${valorInput}`;
+
+            fetch(urlApi, { method: 'POST' })
+            .then(resposta => resposta.text())
+            .then(textoResposta => {
+                let mensagem = document.getElementById('mensagemSistema');
+                mensagem.innerText = textoResposta;
+                
+                // Atualiza a tela se deu Sucesso
+                if (textoResposta.includes("Sucesso") || textoResposta.includes("aprovada")) {
+                    mensagem.style.color = "green";
+                    let partes = textoResposta.split("R$ ");
+                    if(partes.length > 1) {
+                        document.getElementById('saldoUsuario').innerText = "Saldo: R$ " + parseFloat(partes[1]).toFixed(2);
+                    }
+                } else {
+                    mensagem.style.color = "red"; // Ficou vermelho se deu erro
+                }
+                document.getElementById('valorOperacao').value = ""; // Limpa o campo
+                if(tipo == "retirar"){
+                    document.getElementById('btn-cobrar').style.display = 'none';
+                }
+        
+            })
+            .catch(erro => alert("Erro ao conectar com o Java."));
+        }
+
+        // 4. Função para resetar e ler a próxima pessoa da fila
+        function proximoCliente() {
+            document.getElementById('painelUsuario').style.display = 'none';
+            document.getElementById('valorOperacao').value = "";
+            document.getElementById('mensagemSistema').innerText = "";
+            document.getElementById('btn-cobrar').style.display = 'inline-block';
+        }
+        
+        function buscarManualmente(){
+            let valorDigitado = document.getElementById('idParticipante').value.trim(); 
+               
+            if(valorDigitado != ""){
+                valorDigitado = valorDigitado.replace("user_", ""); 
+                valorDigitado = valorDigitado.padStart(3, '0');
+                usuarioAtualId = "user_" + valorDigitado;
+                console.log("TESTE DE MESA - ID enviado: [" + usuarioAtualId + "]");
+                buscarUsuarioNoBackend();
+                let mensagem = document.getElementById('mensagemBuscaManual');
+                    mensagem.innerText = "Buscando o Participante no Sitema...";
+                document.getElementById('idParticipante').value='';
+            }
+        }
+    </script>
+</body>
+</html>
