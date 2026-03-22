@@ -17,13 +17,14 @@
             <input type="text" id="idParticipante" placeholder="Digite o código do participante">
             <button class="btn-buscar" onclick="buscarManualmente()">Buscar</button>
         </div>    
+        <p id="mensagemBuscaManual" style="font-weight: bold; margin-top: 15px;color: white;"></p>
     </div>
-    <p id="mensagemBuscaManual" style="font-weight: bold; margin-top: 15px;"></p>
+    
     
     <div id="reader"></div>
 
     <!-- <div id="painelUsuario" class="painel" style="display: block;"> -->
-    <div class="verso-container">
+    <div id="verso-container" class="verso-container" style="display: none;">
         <img class="img-iluminarCard" src="cartaoVerso.jpg" alt="erro ao carregar imagem">
         <div class="informacoesUsuario">
             <div class="dados">
@@ -38,8 +39,9 @@
                 <button class="btn-cobrar" id="btn-cobrar" onclick="fazerOperacao('retirar')">Cobrar</button>
                 <button class="btn-fechar" onclick="proximoCliente()" style="background-color: #2196F3; color: white;">Fechar</button>
             </div>
+            <p id="mensagemSistema" class="mensagemSistema" style="font-weight: bold ;color: white;"></p>
         </div>
-        <p id="mensagemSistema" style="font-weight: bold ;color: white; margin-top: 15px;"></p>
+        
     </div>
         
         

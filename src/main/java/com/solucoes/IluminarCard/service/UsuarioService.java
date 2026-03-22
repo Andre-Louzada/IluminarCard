@@ -2,18 +2,20 @@ package com.solucoes.IluminarCard.service;
 
 import com.solucoes.IluminarCard.model.Usuario;
 import com.solucoes.IluminarCard.repository.IUsuarioRepository;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.format.DateTimeFormatter;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UsuarioService {
-    // Simulando nosso banco de dados em memória usando um Map (Chave = ID, Valor = Usuario)
     private final IUsuarioRepository repository; 
 
     public UsuarioService(IUsuarioRepository repository) {
         this.repository = repository; 
+        registrarLog(">>> SISTEMA INICIADO: Conectado ao banco de dados com sucesso. <<<");   
     }
     
     public Usuario buscarUsuarioPorId(String id){
@@ -26,8 +28,10 @@ public class UsuarioService {
         
         if(sucesso){
             repository.save(usuario);
+            registrarLog("✅ [DEPOSITO APROVADO] R$ " + valor + " para: " + usuario.getNome() + " | Novo Saldo: R$ " + usuario.getSaldo());
             System.out.println("[ " + LocalDateTime.now()+ " ]"+"✅ [DEPOSITO APROVADO] R$ " + valor + " para o usuário: " + usuario.getNome() + " | Novo Saldo: R$ " + usuario.getSaldo());
         }else{
+            registrarLog("❌ [DEPOSITO RECUSADO] Tentativa de R$ " + valor + " para: " + usuario.getNome());
             System.out.println("[ " + LocalDateTime.now()+ " ]"+"❌ [DEPOSITO RECUSADO] Tentativa de R$ " + valor + " para o usuário: " + usuario.getNome());
         }
         return sucesso;
@@ -39,11 +43,29 @@ public class UsuarioService {
         
         if(sucesso){
             repository.save(usuario);
+            registrarLog("✅ [COBRANCA APROVADA] R$ " + valor + " de: " + usuario.getNome() + " | Novo Saldo: R$ " + usuario.getSaldo());
             System.out.println("[ " + LocalDateTime.now()+ " ]"+"✅ [COBRANCA APROVADA] R$ " + valor + " cobrado do usuário: " + usuario.getNome() + " | Novo Saldo: R$ " + usuario.getSaldo());
         }else{
+            registrarLog("❌ [COBRANCA RECUSADA] Saldo insuficiente! Cobrança: R$ " + valor + " de: " + usuario.getNome() + " (Saldo: R$ " + usuario.getSaldo() + ")");
             System.out.println("[ " + LocalDateTime.now()+ " ]"+"❌ [COBRANCA RECUSADA] Saldo insuficiente! Tentativa de cobrar R$ " + valor + " do usuário: " + usuario.getNome() + " (Saldo atual: R$ " + usuario.getSaldo() + ")");
         }
         return sucesso;
+    }
+    private void registrarLog(String mensagem) {
+        // 1. Formata a data e hora para ficar bonito de ler
+        String dataHora = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+        String linhaLog = "[" + dataHora + "] " + mensagem;
+
+        // 2. Imprime na tela preta (para você ver na hora)
+        System.out.println(linhaLog);
+
+        // 3. Salva no disco rígido para sempre (o 'true' impede que o arquivo seja apagado)
+        try (FileWriter fw = new FileWriter("log_operacoes_iluminarcard.txt", true);
+             PrintWriter pw = new PrintWriter(fw)) {
+            pw.println(linhaLog);
+        } catch (IOException e) {
+            System.out.println("❌ ERRO GRAVE: Não foi possível salvar o log no arquivo TXT!");
+        }
     }
 }
 
