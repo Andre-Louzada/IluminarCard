@@ -52,14 +52,11 @@ public class UsuarioService {
         return sucesso;
     }
     private void registrarLog(String mensagem) {
-        // 1. Formata a data e hora para ficar bonito de ler
         String dataHora = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
         String linhaLog = "[" + dataHora + "] " + mensagem;
 
-        // 2. Imprime na tela preta (para você ver na hora)
         System.out.println(linhaLog);
 
-        // 3. Salva no disco rígido para sempre (o 'true' impede que o arquivo seja apagado)
         try (FileWriter fw = new FileWriter("log_operacoes_iluminarcard.txt", true);
              PrintWriter pw = new PrintWriter(fw)) {
             pw.println(linhaLog);
