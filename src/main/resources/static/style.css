@@ -161,6 +161,26 @@ button {
     margin-bottom: 15px !important; 
 }
 
+.liberar-acesso {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 30%;
+    padding: 30px;
+    border-radius: 35px;
+    background-color: black;
+}
+.liberar-acesso button {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 4px;
+    font-weight: bold;
+    padding: 10px 20px;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
 @media (max-width: 412px) {
     .btn-verso button, .verso-container button {
         white-space: normal !important; 

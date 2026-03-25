@@ -108,11 +108,26 @@ function liberarAcesso(){
     .then(resposta => resposta.text())
     .then(textoResposta => {
         if (textoResposta.includes("acesso liberado")) {
+            sessionStorage.setItem('caixaAutenticado', 'true');
             document.getElementById('liberar-acesso').style.display = 'none';
-            document.getElementById('tela-inicial').style.display = 'block';
+            document.getElementById('image-container').style.display = 'block';
         } else {
             alert("Senha incorreta. Tente novamente.");
         }
     })
     .catch(erro => alert("Erro ao conectar com o Java para autenticação de senha."));
+}
+
+window.onload = function() {
+    let acessoLiberado = sessionStorage.getItem('caixaAutenticado');
+    
+    if (acessoLiberado === 'true') {
+        document.getElementById('liberar-acesso').style.display = 'none';
+        document.getElementById('image-container').style.display = 'block';
+    }
+};
+
+function sairDoSistema() {
+    sessionStorage.removeItem('caixaAutenticado');
+    location.reload(); 
 }
