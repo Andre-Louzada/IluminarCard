@@ -48,11 +48,7 @@ button {
     background-color: #4CAF50; 
     color: white; 
 }
-.btn-cobrar { background-color: #f44336; color: white; }
-/*para mobile:
-idParticipante width 50
-escanear 
-*/
+.btn-cobrar{ background-color: #f44336; color: white; }
     
 .img-iluminarCard { 
     width: 100%; 

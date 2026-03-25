@@ -8,6 +8,7 @@ public class IluminarCardApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(IluminarCardApplication.class, args);
+                
 	}
 
 }
