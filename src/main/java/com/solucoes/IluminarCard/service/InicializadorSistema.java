@@ -20,15 +20,7 @@ public class InicializadorSistema implements CommandLineRunner{
             String senhaDoBanco = dadosSalvos.getSenha();
             System.out.println("✅ Sistema seguro. Aguardando acessos na web com a senha: " + senhaDoBanco);
         }else {
-            System.out.println("Insira uma senha para acessos na web.");
-            DadosSistema dados = new DadosSistema();
-            Scanner scanner = new Scanner(System.in);
-            String senhaDigitada = scanner.nextLine();
-            dados.setSenha(senhaDigitada); 
-            repository.save(dados);
-            DadosSistema dadosSalvos = repository.findById(1).get();
-            String senhaDoBanco = dadosSalvos.getSenha();
-            System.out.println("A senha para acessar o sistema é:" + senhaDigitada + "||" + senhaDoBanco);
+            System.out.println("Insira uma senha no banco de dados para acessos na web.");
         }
     }
 }

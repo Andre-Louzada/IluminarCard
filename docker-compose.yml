@@ -1,0 +1,28 @@
+services:
+  iluminar-db:
+    image: mysql:8.0
+    container_name: iluminar-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: iluminarcard
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  iluminar-app:
+    build: .
+    container_name: iluminar-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - iluminar-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://iluminar-db:3306/iluminarcard?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_PASSWORD=123456
+    volumes:
+      - ./logs:/app/logs
+
+volumes:
+  mysql_data:

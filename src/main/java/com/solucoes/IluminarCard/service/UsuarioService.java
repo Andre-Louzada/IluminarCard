@@ -57,7 +57,7 @@ public class UsuarioService {
 
         System.out.println(linhaLog);
 
-        try (FileWriter fw = new FileWriter("log_operacoes_iluminarcard.txt", true);
+        try (FileWriter fw = new FileWriter("logs/log_operacoes_iluminarcard.txt", true);
              PrintWriter pw = new PrintWriter(fw)) {
             pw.println(linhaLog);
         } catch (IOException e) {
